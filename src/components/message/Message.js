@@ -1,8 +1,11 @@
-import './Message.scss'
+import './Message.scss';
 
-export const Message = ({ name }) => {
+export const Message = ({ messageList }) => {
     return (
-        <h2 className="Message">Hi, my name is {name}!</h2>
+        messageList.map((el, index) => {
+            return <p key={index} className="Message">{el.author}: {el.message}</p>
+        })
     );
 }
+
 
