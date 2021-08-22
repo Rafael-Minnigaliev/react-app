@@ -1,33 +1,18 @@
-import { useState } from "react";
 import "./Form.scss";
+import { TextField, Button, Icon } from '@material-ui/core';
+import { useEffect, useRef } from "react";
 
-export const Form = ({ setMessageList, messageList }) => {
+export const Form = ({ handleClick, handleMessageChange, message }) => {
+    const ref = useRef();
 
-    const [author, setAuthor] = useState("");
-    const [message, setMessage] = useState("");
-
-    const handleAuthorChange = (e) => {
-        setAuthor(e.target.value);
-    };
-
-    const handleMessageChange = (e) => {
-        setMessage(e.target.value);
-    };
-
-    const handleClick = () => {
-        if (author.length !== 0 && message.length !== 0) {
-            setMessageList([...messageList, { author: author, message: message }]);
-            setAuthor("");
-            setMessage("");
-        }
-    };
+    useEffect(() => {
+        ref?.current?.focus();
+    }, [handleClick])
 
     return (
         <div className="Form">
-            <h3>Введите имя автора и текст сообщения</h3>< input className="Form__input" placeholder="Автор" type="text" value={author} onChange={handleAuthorChange} />
-            < textarea className="Form__input Form__input_message" placeholder="Сообщение" type="text" value={message} onChange={handleMessageChange} />
-            <button className="Form__btn" onClick={handleClick}>Отправить</button>
+            <TextField id="outlined-basic" multiline fullWidth maxRows={2} minRows={2} label="Сообщение" placeholder="Введите сообщение" variant="outlined" inputRef={ref} value={message} onChange={handleMessageChange} />
+            <Button variant="contained" color="primary" style={{ marginLeft: '10px' }} endIcon={<Icon>send</Icon>} onClick={handleClick}>Отправить</Button>
         </div>
     );
 }
-
