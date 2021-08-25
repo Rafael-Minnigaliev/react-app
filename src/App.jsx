@@ -1,17 +1,17 @@
-import { useEffect, useState } from 'react';
-import { Message } from './components/message';
-import { Form } from './components/form';
-import './App.scss';
-import { ChatList } from './components/chat-list';
-import { Container, List, ListSubheader, createTheme, ThemeProvider } from '@material-ui/core';
+import { useEffect, useState } from "react";
+import { Message } from "./Components/Message";
+import { Form } from "./Components/Form";
+import "./App.scss";
+import { ChatList } from "./Components/Chat-list";
+import { Container, List, ListSubheader, createTheme, ThemeProvider } from "@material-ui/core";
 
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#1976d2',
+      main: "#1976d2",
     },
     secondary: {
-      main: '#11cb5f',
+      main: "#11cb5f",
     },
   },
 });
@@ -19,10 +19,15 @@ const theme = createTheme({
 export const App = () => {
   const [messageList, setMessageList] = useState([]);
   const [message, setMessage] = useState("");
-  const [messgeId, setMessgeId] = useState(0)
+  const [messgeId, setMessgeId] = useState(0);
 
-  const [chatList] = useState([{ chatId: 1, name: "Vanya" }, { chatId: 2, name: "Dima" }, { chatId: 3, name: "Misha" }, { chatId: 4, name: "Vasya" }])
-  const [name] = useState(chatList[0].name)
+  const [chatList] = useState([
+    { chatId: 1, name: "Vanya" },
+    { chatId: 2, name: "Dima" },
+    { chatId: 3, name: "Misha" },
+    { chatId: 4, name: "Vasya" },
+  ]);
+  const [name] = useState(chatList[0].name);
 
   const [notice, setNotice] = useState("");
 
@@ -32,7 +37,7 @@ export const App = () => {
 
   const handleClick = () => {
     if (name.length !== 0 && message.length !== 0) {
-      setMessgeId(messgeId + 1)
+      setMessgeId(messgeId + 1);
       setMessageList([...messageList, { messageId: messgeId, name: name, message: message }]);
       setMessage("");
     }
@@ -51,15 +56,24 @@ export const App = () => {
     setNotice("");
   };
 
-
   return (
     <Container fixed>
       <ThemeProvider theme={theme}>
         <header className="App__header">
-          <p className="App__notice" onMouseOver={MousOver}>{notice}</p>
+          <p className="App__notice" onMouseOver={MousOver}>
+            {notice}
+          </p>
           <h1 className="App__title">Messanger</h1>
           <div className="App__messanger">
-            <List component="nav" aria-label="secondary mailbox folders" subheader={<ListSubheader component="div" color="primary" id="nested-list-subheader">Список чатов</ListSubheader>}>
+            <List
+              component="nav"
+              aria-label="secondary mailbox folders"
+              subheader={
+                <ListSubheader component="div" color="primary" id="nested-list-subheader">
+                  Список чатов
+                </ListSubheader>
+              }
+            >
               <ChatList chatList={chatList} />
             </List>
             <div className="App__message">
@@ -67,7 +81,11 @@ export const App = () => {
                 <h3 className="App__author">{name}</h3>
                 <Message messageList={messageList} />
               </ul>
-              <Form handleMessageChange={handleMessageChange} handleClick={handleClick} message={message} />
+              <Form
+                handleMessageChange={handleMessageChange}
+                handleClick={handleClick}
+                message={message}
+              />
             </div>
           </div>
         </header>
@@ -75,4 +93,3 @@ export const App = () => {
     </Container>
   );
 };
-
