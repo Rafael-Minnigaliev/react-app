@@ -11,12 +11,14 @@ const useStyles = makeStyles((theme) =>
       padding: "3px 15px 6px",
       fontSize: "14px",
       borderRadius: "14px",
+      // opacity: 0.5,
     },
   })
 );
 
 export const Message = ({ messageList }) => {
   const classes = useStyles();
+  // const [useClass, setUseClass] = useState("message");
 
   return messageList.map((el) => {
     return (

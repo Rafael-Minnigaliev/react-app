@@ -17,8 +17,8 @@ export const Form = ({ handleClick, handleMessageChange, message }) => {
         fullWidth
         maxRows={2}
         minRows={2}
-        label="Сообщение"
-        placeholder="Введите сообщение"
+        label="Message"
+        placeholder="Enter a message"
         variant="outlined"
         inputRef={ref}
         value={message}
@@ -31,7 +31,7 @@ export const Form = ({ handleClick, handleMessageChange, message }) => {
         endIcon={<Icon>send</Icon>}
         onClick={handleClick}
       >
-        Отправить
+        SEND
       </Button>
     </div>
   );
