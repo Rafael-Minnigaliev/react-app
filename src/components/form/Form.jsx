@@ -7,7 +7,7 @@ export const Form = ({ handleClick, handleMessageChange, message }) => {
 
   useEffect(() => {
     ref?.current?.focus();
-  }, []);
+  }, [handleClick]);
 
   return (
     <div className="Form">

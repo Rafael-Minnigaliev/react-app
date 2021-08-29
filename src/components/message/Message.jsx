@@ -16,15 +16,15 @@ const useStyles = makeStyles((theme) =>
   })
 );
 
-export const Message = ({ chatList, chatId }) => {
+export const Message = ({ messageList }) => {
   const classes = useStyles();
-  if (!chatList[chatId]) {
-    return null;
-  } else {
-    return chatList[chatId].messages.map((id) => (
-      <p key={id} className={classes.root}>
-        {id.message}
+  // const [useClass, setUseClass] = useState("message");
+
+  return messageList.map((el) => {
+    return (
+      <p key={el.messageId} className={classes.root}>
+        {el.message}
       </p>
-    ));
-  }
+    );
+  });
 };

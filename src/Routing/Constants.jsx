@@ -1,7 +1,6 @@
 export const ROUTES = {
   MAIN: "/",
-  CHATS: "/chats",
-  CHAT: "/chats/:chatId?",
+  CHATS: "/chats/:chatid?",
   PROFILES: "/profiles",
   NOT_FOUND: "/not-found",
 };
