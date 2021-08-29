@@ -14,6 +14,9 @@ export const Routing = () => {
       <Route exact path={ROUTES.CHATS}>
         <Chats />
       </Route>
+      <Route path={ROUTES.CHAT}>
+        <Chats />
+      </Route>
       <Route path={ROUTES.PROFILES}>
         <Profile />
       </Route>
