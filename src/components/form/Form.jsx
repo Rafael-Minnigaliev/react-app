@@ -1,6 +1,6 @@
-import "./Form.scss";
 import { TextField, Button, Icon } from "@material-ui/core";
 import { useEffect, useRef } from "react";
+import "./Form.scss";
 
 export const Form = ({ handleClick, handleMessageChange, message }) => {
   const ref = useRef();

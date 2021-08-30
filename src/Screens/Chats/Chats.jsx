@@ -1,11 +1,12 @@
+import { List, ListSubheader, TextField, IconButton } from "@material-ui/core";
+import AddCircleIcon from "@material-ui/icons/AddCircle";
+import { Redirect, Route, Switch, useParams, useRouteMatch } from "react-router-dom";
+import { useState } from "react";
+import { ROUTES } from "../../Routing/Constants";
 import { Message } from "../../Components/Message";
 import { Form } from "../../Components/Form";
 import { ChatList } from "../../Components/Chat-list";
-import { List, ListSubheader } from "@material-ui/core";
-import { useState, useEffect } from "react";
 import "./Chats.scss";
-import { Redirect, Route, Switch, useParams, useRouteMatch } from "react-router-dom";
-import { ROUTES } from "../../Routing/Constants";
 
 const initialChats = {
   id1: {
@@ -29,26 +30,24 @@ const initialChats = {
 export const Chats = () => {
   const [message, setMessage] = useState("");
   const [messageId, setMessgeId] = useState(0);
-
   const { path } = useRouteMatch();
   const { chatId } = useParams();
-
   const [chatList, setChatList] = useState(initialChats);
-
   const [name, setName] = useState("");
-
   const [newChat, setNewChat] = useState("");
-
   const [notice, setNotice] = useState("");
-
   const [chatIdCounter, setChatIdCounter] = useState("id5");
+
+  if (!chatList[chatId] && path === "/chats/:chatId?") {
+    return <Redirect to={ROUTES.CHATS} />;
+  }
 
   const handleMessageChange = (e) => {
     setMessage(e.target.value);
   };
 
   const handleClick = () => {
-    if (name.length !== 0 && message.length !== 0) {
+    if (message.length !== 0) {
       setMessgeId(messageId + 1);
       setChatList({
         ...chatList,
@@ -58,38 +57,34 @@ export const Chats = () => {
         },
       });
       setMessage("");
-    }
-  };
-
-  useEffect(() => {
-    if (chatList[chatId] && chatList[chatId].messages.length !== 0) {
       const timer = setTimeout(() => {
-        setNotice(`The message was sent to the contact: ${chatList[chatId].name}`);
+        setNotice(`The message was sent to the contact: ${name}`);
       }, 1500);
       return () => clearTimeout(timer);
     }
-  }, []);
+  };
 
   const MousEover = () => {
     setNotice("");
   };
-
-  if (!chatList[chatId] && path === "/chats/:chatId?") {
-    return <Redirect to={ROUTES.CHATS} />;
-  }
 
   const handleChatChange = (e) => {
     setNewChat(e.target.value);
   };
 
   const handleClickSetChat = () => {
-    setChatIdCounter(`id${Number(chatIdCounter[chatIdCounter.length - 1]) + 1}`);
-    setChatList({ ...chatList, [chatIdCounter]: { name: newChat, messages: [] } });
-    setNewChat("");
+    if (newChat.length !== 0) {
+      setChatIdCounter(`id${Number(chatIdCounter[chatIdCounter.length - 1]) + 1}`);
+      setChatList({ ...chatList, [chatIdCounter]: { name: newChat, messages: [] } });
+      setNewChat("");
+    }
   };
 
   const handeleClickChatDelete = () => {
-    setChatList(delete chatList[chatId]);
+    setChatList(delete chatList[chatId]); //Не знаю что использовать вместо chatI, chatId при возникновении события еще не объявлен
+    //setChatList(delete chatList[id]); при передаче параметра id с функцией handeleClickChatDelete вот так: onClick={handeleClickChatDelete(id)}
+    //передаются все id и функция срабатывает во время первого рендера => chatList пуст
+    setChatList({ ...chatList });
   };
 
   return (
@@ -114,8 +109,24 @@ export const Chats = () => {
             handeleClickChatDelete={handeleClickChatDelete}
           />
         </List>
-        <input type="text" value={newChat} onChange={handleChatChange}></input>
-        <button onClick={handleClickSetChat}>SET CHAT</button>
+        <div className="Chats__add-chat">
+          <TextField
+            id="outlined-basic"
+            label="Chat"
+            placeholder="Enter the chat name"
+            variant="outlined"
+            value={newChat}
+            onChange={handleChatChange}
+          />
+          <IconButton
+            aria-label="delete"
+            color="primary"
+            onClick={handleClickSetChat}
+            style={{ marginLeft: "10px" }}
+          >
+            <AddCircleIcon fontSize="large" />
+          </IconButton>
+        </div>
       </div>
       <Switch>
         <Route path={`${path}/:chatId`}>
@@ -132,7 +143,7 @@ export const Chats = () => {
           </div>
         </Route>
         <Route>
-          <h3>Please select a chat</h3>
+          <h2 className="Chats__no-chat">Please select a chat</h2>
         </Route>
       </Switch>
     </div>

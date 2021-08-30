@@ -4,12 +4,19 @@
   padding: 15px;
   background-color: #fff;
   margin-top: 60px;
+  align-items: self-start;
 
   &__notice {
     color: #1976d2;
     position: absolute;
     left: 20px;
     top: 15px;
+  }
+
+  &__add-chat {
+    display: flex;
+    align-items: center;
+    margin-top: 20px;
   }
 
   &__message {
@@ -20,6 +27,7 @@
     padding: 15px;
     border-radius: 10px;
     background-color: rgb(215, 229, 255);
+    margin-left: 20px;
   }
 
   &__message-list {
@@ -37,5 +45,10 @@
   &__author {
     color: #11cb5f;
     margin-bottom: 15px;
+  }
+
+  &__no-chat {
+    color: #11cb5f;
+    margin: 150px auto 0;
   }
 }

@@ -1,11 +1,11 @@
-import { ListItem, ListItemText } from "@material-ui/core";
+import { ListItem, ListItemText, IconButton } from "@material-ui/core";
+import ClearIcon from "@material-ui/icons/Clear";
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import "./ChatList.scss";
 
 export const ChatList = ({ chatList, chatId, setName, handeleClickChatDelete }) => {
   useEffect(() => {
-    console.log(chatId);
     if (!chatList[chatId]) {
       setName("");
     } else {
@@ -14,16 +14,23 @@ export const ChatList = ({ chatList, chatId, setName, handeleClickChatDelete }) 
   });
 
   return Object.keys(chatList).map((id) => (
-    <Link to={`/chats/${id}`} key={id} style={{ textDecoration: "none" }}>
-      <div className="ChatList">
+    <div className="ChatList">
+      <Link
+        className="ChatList__chat"
+        to={`/chats/${id}`}
+        key={id}
+        style={{ textDecoration: "none" }}
+      >
         <ListItem divider button>
           <ListItemText
             style={{ color: id === chatId ? "#11cb5f" : "#1976d2" }}
             primary={chatList[id].name}
           />
-          <button onClick={handeleClickChatDelete}>Delete</button>
         </ListItem>
-      </div>
-    </Link>
+      </Link>
+      <IconButton aria-label="delete" onClick={handeleClickChatDelete}>
+        <ClearIcon />
+      </IconButton>
+    </div>
   ));
 };
