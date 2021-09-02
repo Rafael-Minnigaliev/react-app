@@ -1,0 +1,7 @@
+.ChatList {
+  display: flex;
+
+  &__chat {
+    flex-grow: 1;
+  }
+}

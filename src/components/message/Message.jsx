@@ -1,28 +1,13 @@
-import { makeStyles, createStyles } from "@material-ui/core";
+import "./Message.scss";
 
-const useStyles = makeStyles((theme) =>
-  createStyles({
-    root: {
-      marginBottom: "10px",
-      color: "#fff",
-      wordBreak: "break-all",
-      display: "block",
-      backgroundColor: theme.palette.primary.main,
-      padding: "3px 15px 6px",
-      fontSize: "14px",
-      borderRadius: "14px",
-    },
-  })
-);
-
-export const Message = ({ messageList }) => {
-  const classes = useStyles();
-
-  return messageList.map((el) => {
-    return (
-      <p key={el.messageId} className={classes.root}>
-        {el.message}
+export const Message = ({ chatList, chatId }) => {
+  if (!chatList[chatId]) {
+    return null;
+  } else {
+    return chatList[chatId].messages.map((id) => (
+      <p key={id.messageId} className="Message">
+        {id.message}
       </p>
-    );
-  });
+    ));
+  }
 };

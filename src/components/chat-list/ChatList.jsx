@@ -1,21 +1,36 @@
-import { ListItem, ListItemText, makeStyles, createStyles } from "@material-ui/core";
+import { ListItem, ListItemText, IconButton } from "@material-ui/core";
+import ClearIcon from "@material-ui/icons/Clear";
+import { useEffect } from "react";
+import { Link } from "react-router-dom";
+import "./ChatList.scss";
 
-const useStyles = makeStyles((theme) =>
-  createStyles({
-    root: {
-      color: theme.palette.secondary.main,
-    },
-  })
-);
-
-export const ChatList = ({ chatList }) => {
-  const classes = useStyles();
-
-  return chatList.map((el) => {
-    return (
-      <ListItem divider button key={el.chatId}>
-        <ListItemText className={classes.root} primary={el.name} />
-      </ListItem>
-    );
+export const ChatList = ({ chatList, chatId, setName, handeleClickChatDelete }) => {
+  useEffect(() => {
+    if (!chatList[chatId]) {
+      setName("");
+    } else {
+      setName(chatList[chatId].name);
+    }
   });
+
+  return Object.keys(chatList).map((id) => (
+    <div className="ChatList">
+      <Link
+        className="ChatList__chat"
+        to={`/chats/${id}`}
+        key={id}
+        style={{ textDecoration: "none" }}
+      >
+        <ListItem divider button>
+          <ListItemText
+            style={{ color: id === chatId ? "#11cb5f" : "#1976d2" }}
+            primary={chatList[id].name}
+          />
+        </ListItem>
+      </Link>
+      <IconButton aria-label="delete" onClick={handeleClickChatDelete}>
+        <ClearIcon />
+      </IconButton>
+    </div>
+  ));
 };
