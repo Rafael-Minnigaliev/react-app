@@ -1,6 +1,6 @@
 import { List, ListSubheader, TextField, IconButton } from "@material-ui/core";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
-import { Redirect, Route, Switch, useParams, useRouteMatch } from "react-router-dom";
+import { Redirect, useParams, useRouteMatch } from "react-router-dom";
 import { useState } from "react";
 import { ROUTES } from "../../Routing/Constants";
 import { Message } from "../../Components/Message";
@@ -64,7 +64,7 @@ export const Chats = () => {
     }
   };
 
-  const MousEover = () => {
+  const mouseOver = () => {
     setNotice("");
   };
 
@@ -74,22 +74,20 @@ export const Chats = () => {
 
   const handleClickSetChat = () => {
     if (newChat.length !== 0) {
-      setChatIdCounter(`id${Number(chatIdCounter[chatIdCounter.length - 1]) + 1}`);
+      setChatIdCounter(`id${Math.random() + 6}`);
       setChatList({ ...chatList, [chatIdCounter]: { name: newChat, messages: [] } });
       setNewChat("");
     }
   };
 
-  const handeleClickChatDelete = () => {
-    setChatList(delete chatList[chatId]); //Не знаю что использовать вместо chatI, chatId при возникновении события еще не объявлен
-    //setChatList(delete chatList[id]); при передаче параметра id с функцией handeleClickChatDelete вот так: onClick={handeleClickChatDelete(id)}
-    //передаются все id и функция срабатывает во время первого рендера => chatList пуст
+  const handeleClickChatDelete = (id) => {
+    setChatList(delete chatList[id]);
     setChatList({ ...chatList });
   };
 
   return (
     <div className="Chats">
-      <p className="Chats__notice" onMouseOver={MousEover}>
+      <p className="Chats__notice" onMouseOver={mouseOver}>
         {notice}
       </p>
       <div>
@@ -128,24 +126,20 @@ export const Chats = () => {
           </IconButton>
         </div>
       </div>
-      <Switch>
-        <Route path={`${path}/:chatId`}>
-          <div className="Chats__message">
-            <ul className="Chats__message-list">
-              <h3 className="Chats__author">{name}</h3>
-              <Message chatList={chatList} chatId={chatId} />
-            </ul>
-            <Form
-              handleMessageChange={handleMessageChange}
-              handleClick={handleClick}
-              message={message}
-            />
-          </div>
-        </Route>
-        <Route>
-          <h2 className="Chats__no-chat">Please select a chat</h2>
-        </Route>
-      </Switch>
+      {chatList[chatId] && (
+        <div className="Chats__message">
+          <ul className="Chats__message-list">
+            <h3 className="Chats__author">{name}</h3>
+            <Message chatList={chatList} chatId={chatId} />
+          </ul>
+          <Form
+            handleMessageChange={handleMessageChange}
+            handleClick={handleClick}
+            message={message}
+          />
+        </div>
+      )}
+      {!chatList[chatId] && <h2 className="Chats__no-chat">Please select a chat</h2>}
     </div>
   );
 };

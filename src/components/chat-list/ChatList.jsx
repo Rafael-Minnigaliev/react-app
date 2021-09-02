@@ -11,7 +11,7 @@ export const ChatList = ({ chatList, chatId, setName, handeleClickChatDelete }) 
     } else {
       setName(chatList[chatId].name);
     }
-  });
+  }, [chatList, chatId, setName]);
 
   return Object.keys(chatList).map((id) => (
     <div className="ChatList">
@@ -28,7 +28,7 @@ export const ChatList = ({ chatList, chatId, setName, handeleClickChatDelete }) 
           />
         </ListItem>
       </Link>
-      <IconButton aria-label="delete" onClick={handeleClickChatDelete}>
+      <IconButton aria-label="delete" onClick={() => handeleClickChatDelete(id)}>
         <ClearIcon />
       </IconButton>
     </div>
