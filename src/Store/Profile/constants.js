@@ -1,0 +1,1 @@
+export const TOGGLE_NAME_ACTION = "TOGGLE_NAME_ACTION";
