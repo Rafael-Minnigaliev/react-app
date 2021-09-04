@@ -1,44 +1,35 @@
-import { List, ListSubheader, TextField, IconButton } from "@material-ui/core";
-import AddCircleIcon from "@material-ui/icons/AddCircle";
+import { List, ListSubheader, TextField } from "@material-ui/core";
+import { Button, Dialog, DialogContent, DialogContentText, DialogActions } from "@material-ui/core";
+import { useDispatch, useSelector } from "react-redux";
 import { Redirect, useParams, useRouteMatch } from "react-router-dom";
 import { useState } from "react";
+import { chatsSelector } from "../../Store/Chats/selectors";
+import { addChatAction, deleteChatAction } from "../../Store/Chats/actions";
+import { addMessageAction, deleteMessageAction } from "../../Store/Messages/actions";
+import { messagesSelector } from "../../Store/Messages/selectors";
 import { ROUTES } from "../../Routing/Constants";
 import { Message } from "../../Components/Message";
 import { Form } from "../../Components/Form";
 import { ChatList } from "../../Components/Chat-list";
 import "./Chats.scss";
 
-const initialChats = {
-  id1: {
-    name: "Vanya",
-    messages: [],
-  },
-  id2: {
-    name: "Dima",
-    messages: [],
-  },
-  id3: {
-    name: "Misha",
-    messages: [],
-  },
-  id4: {
-    name: "Vasya",
-    messages: [],
-  },
-};
-
 export const Chats = () => {
-  const [message, setMessage] = useState("");
-  const [messageId, setMessgeId] = useState(0);
-  const { path } = useRouteMatch();
-  const { chatId } = useParams();
-  const [chatList, setChatList] = useState(initialChats);
-  const [name, setName] = useState("");
-  const [newChat, setNewChat] = useState("");
-  const [notice, setNotice] = useState("");
-  const [chatIdCounter, setChatIdCounter] = useState("id5");
+  const dispatch = useDispatch();
 
-  if (!chatList[chatId] && path === "/chats/:chatId?") {
+  const [message, setMessage] = useState("");
+  const [notice, setNotice] = useState("");
+  const { messageList } = useSelector(messagesSelector);
+
+  const chatList = useSelector(chatsSelector);
+  const [newChat, setNewChat] = useState("");
+  const [name, setName] = useState("");
+
+  const { chatId } = useParams();
+  const { path } = useRouteMatch();
+
+  const [open, setOpen] = useState(false);
+
+  if (!chatList.find((item) => item.id === chatId) && path === "/chats/:chatId?") {
     return <Redirect to={ROUTES.CHATS} />;
   }
 
@@ -48,14 +39,7 @@ export const Chats = () => {
 
   const handleClick = () => {
     if (message.length !== 0) {
-      setMessgeId(messageId + 1);
-      setChatList({
-        ...chatList,
-        [chatId]: {
-          ...chatList[chatId],
-          messages: [...chatList[chatId].messages, { messageId: messageId, message: message }],
-        },
-      });
+      dispatch(addMessageAction({ message, chatId }));
       setMessage("");
       const timer = setTimeout(() => {
         setNotice(`The message was sent to the contact: ${name}`);
@@ -74,15 +58,23 @@ export const Chats = () => {
 
   const handleClickSetChat = () => {
     if (newChat.length !== 0) {
-      setChatIdCounter(`id${Math.random() + 6}`);
-      setChatList({ ...chatList, [chatIdCounter]: { name: newChat, messages: [] } });
+      dispatch(addChatAction({ newChat }));
+      setOpen(false);
       setNewChat("");
     }
   };
 
   const handeleClickChatDelete = (id) => {
-    setChatList(delete chatList[id]);
-    setChatList({ ...chatList });
+    dispatch(deleteChatAction({ id }));
+    dispatch(deleteMessageAction({ id }));
+  };
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
   };
 
   return (
@@ -92,8 +84,6 @@ export const Chats = () => {
       </p>
       <div>
         <List
-          component="nav"
-          aria-label="secondary mailbox folders"
           subheader={
             <ListSubheader component="div" color="primary" id="nested-list-subheader">
               Сhat list
@@ -101,45 +91,56 @@ export const Chats = () => {
           }
         >
           <ChatList
-            chatList={chatList}
             chatId={chatId}
-            setName={setName}
+            chatList={chatList}
             handeleClickChatDelete={handeleClickChatDelete}
+            setName={setName}
           />
         </List>
         <div className="Chats__add-chat">
-          <TextField
-            id="outlined-basic"
-            label="Chat"
-            placeholder="Enter the chat name"
-            variant="outlined"
-            value={newChat}
-            onChange={handleChatChange}
-          />
-          <IconButton
-            aria-label="delete"
-            color="primary"
-            onClick={handleClickSetChat}
-            style={{ marginLeft: "10px" }}
-          >
-            <AddCircleIcon fontSize="large" />
-          </IconButton>
+          <Button variant="outlined" color="primary" onClick={handleClickOpen}>
+            Add a chat
+          </Button>
+          <Dialog open={open} onClose={handleClose}>
+            <DialogContent>
+              <DialogContentText>Enter the chat name</DialogContentText>
+              <TextField
+                autoFocus
+                margin="dense"
+                id="name"
+                label="Chat"
+                type="text"
+                fullWidth
+                value={newChat}
+                onChange={handleChatChange}
+              />
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleClose} color="primary">
+                Cancel
+              </Button>
+              <Button onClick={handleClickSetChat} color="primary">
+                Add
+              </Button>
+            </DialogActions>
+          </Dialog>
         </div>
       </div>
-      {chatList[chatId] && (
+      {chatId && (
         <div className="Chats__message">
           <ul className="Chats__message-list">
             <h3 className="Chats__author">{name}</h3>
-            <Message chatList={chatList} chatId={chatId} />
+            <Message messageList={messageList} chatId={chatId} />
           </ul>
           <Form
             handleMessageChange={handleMessageChange}
             handleClick={handleClick}
             message={message}
+            chatId={chatId}
           />
         </div>
       )}
-      {!chatList[chatId] && <h2 className="Chats__no-chat">Please select a chat</h2>}
+      {!chatId && <h2 className="Chats__no-chat">Please select a chat</h2>}
     </div>
   );
 };

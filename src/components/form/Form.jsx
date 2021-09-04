@@ -2,12 +2,12 @@ import { TextField, Button, Icon } from "@material-ui/core";
 import { useEffect, useRef } from "react";
 import "./Form.scss";
 
-export const Form = ({ handleClick, handleMessageChange, message }) => {
+export const Form = ({ handleClick, handleMessageChange, message, chatId }) => {
   const ref = useRef();
 
   useEffect(() => {
     ref?.current?.focus();
-  }, []);
+  }, [chatId]);
 
   return (
     <div className="Form">
