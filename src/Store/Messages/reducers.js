@@ -1,7 +1,5 @@
 import { ADD_MESSAGE_ACTION, DELETE_MESSAGE_ACTION } from "./constants";
 
-const _ = require("lodash");
-
 const initialState = {
   messageList: {},
   //{[id]:[{ id: "*", text: "*", author: "*" }],}
@@ -17,16 +15,20 @@ export const messageReducers = (state = initialState, action) => {
           ...state.messageList,
           [action.payload.chatId]: [
             ...currentList,
-            { id: _.uniqueId(), text: action.payload.message, author: "author" },
+            {
+              id: `${action.payload.chatId}-${currentList.length}`,
+              text: action.payload.message,
+              author: "author",
+            },
           ],
         },
       };
 
     case DELETE_MESSAGE_ACTION:
-      delete state.messageList[[action.payload.id]];
+      const { [action.payload.id]: messagesToDelete, ...restMessageList } = state.messageList;
       return {
         ...state,
-        messageList: { ...state.messageList },
+        messageList: { ...restMessageList },
       };
     default:
       return state;

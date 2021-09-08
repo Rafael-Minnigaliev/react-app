@@ -1,12 +1,7 @@
 import { ADD_CHAT_ACTION, DELETE_CHAT_ACTION } from "./constants";
 
-const _ = require("lodash");
-
 const initialState = {
-  chatList: [
-    { id: "01", name: "vasya" },
-    { id: "02", name: "vitya" },
-  ],
+  chatList: [],
   //{id:*, name:*}
 };
 
@@ -15,7 +10,10 @@ export const chatReducers = (state = initialState, action) => {
     case ADD_CHAT_ACTION:
       return {
         ...state,
-        chatList: [...state.chatList, { id: _.uniqueId(), name: action.payload.newChat }],
+        chatList: [
+          ...state.chatList,
+          { id: String(Math.random()), chatName: action.payload.chatName },
+        ],
       };
     case DELETE_CHAT_ACTION:
       return {
