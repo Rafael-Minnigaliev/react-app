@@ -4,31 +4,26 @@ import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import "./ChatList.scss";
 
-export const ChatList = ({ chatList, chatId, setName, handeleClickChatDelete }) => {
+export const ChatList = ({ chatId, chatList, handeleClickChatDelete, setName }) => {
   useEffect(() => {
-    if (!chatList[chatId]) {
+    if (!chatId || !chatList.find((item) => item.id === chatId)) {
       setName("");
     } else {
-      setName(chatList[chatId].name);
+      setName(chatList.find((item) => item.id === chatId).name);
     }
-  });
+  }, [chatList, chatId, setName]);
 
-  return Object.keys(chatList).map((id) => (
+  return chatList.map((el) => (
     <div className="ChatList">
-      <Link
-        className="ChatList__chat"
-        to={`/chats/${id}`}
-        key={id}
-        style={{ textDecoration: "none" }}
-      >
+      <Link className="ChatList__chat" to={`/chats/${el.id}`} key={el.id}>
         <ListItem divider button>
           <ListItemText
-            style={{ color: id === chatId ? "#11cb5f" : "#1976d2" }}
-            primary={chatList[id].name}
+            style={{ color: chatId === el.id ? "#11cb5f" : "#1976d2" }}
+            primary={el.name}
           />
         </ListItem>
       </Link>
-      <IconButton aria-label="delete" onClick={handeleClickChatDelete}>
+      <IconButton onClick={() => handeleClickChatDelete(el.id)}>
         <ClearIcon />
       </IconButton>
     </div>

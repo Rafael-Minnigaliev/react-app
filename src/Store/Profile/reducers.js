@@ -5,7 +5,7 @@ const initialState = {
   showName: false,
 };
 
-export const profileReducrs = (state = initialState, action) => {
+export const profileReducers = (state = initialState, action) => {
   switch (action.type) {
     case TOGGLE_NAME_ACTION:
       return {
