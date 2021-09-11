@@ -8,6 +8,7 @@ import { messageReducers } from "./Messages/reducers";
 import { chatReducers } from "./Chats/reducers";
 import { middleware } from "../Middleware/middleware";
 import mySaga from "../Middleware/sagas";
+import { dogPictureReducers } from "./Dog-pictures/reducers";
 
 const sagaMiddleware = createSagaMiddleware();
 
@@ -23,6 +24,7 @@ const rootReducer = combineReducers({
   profile: profileReducers,
   messages: messageReducers,
   chats: chatReducers,
+  dogPicture: dogPictureReducers,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

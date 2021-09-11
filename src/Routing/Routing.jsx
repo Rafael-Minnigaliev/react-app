@@ -4,6 +4,7 @@ import { Profile } from "../Screens/Profile";
 import { Chats } from "../Screens/Chats";
 import { ROUTES } from "./Constants";
 import { NotFound } from "../Screens/NotFound";
+import { Dogs } from "../Screens/Dogs";
 
 export const Routing = () => {
   return (
@@ -19,6 +20,9 @@ export const Routing = () => {
       </Route>
       <Route path={ROUTES.PROFILES}>
         <Profile />
+      </Route>
+      <Route path={ROUTES.DOGS}>
+        <Dogs />
       </Route>
       <Route path={ROUTES.NOT_FOUND}>
         <NotFound />
