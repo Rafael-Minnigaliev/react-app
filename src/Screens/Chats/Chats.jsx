@@ -1,16 +1,17 @@
-import { List, ListSubheader, TextField } from "@material-ui/core";
-import { Button, Dialog, DialogContent, DialogContentText, DialogActions } from "@material-ui/core";
+import { List, ListSubheader } from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
 import { Redirect, useParams, useRouteMatch } from "react-router-dom";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { AddChatButton } from "../../Components/Add-chat-button/Main/AddChatButton";
 import { chatsSelector } from "../../Store/Chats/selectors";
-import { addChatAction, deleteChatAction } from "../../Store/Chats/actions";
-import { addMessageAction, deleteMessageAction } from "../../Store/Messages/actions";
+import { addChatAction, deleteChatWithSaga } from "../../Store/Chats/actions";
+import { addMessageThunkAction, deleteMessageAction } from "../../Store/Messages/actions";
 import { messagesSelector } from "../../Store/Messages/selectors";
 import { ROUTES } from "../../Routing/Constants";
-import { Message } from "../../Components/Message";
-import { Form } from "../../Components/Form";
 import { ChatList } from "../../Components/Chat-list";
+import { Notice } from "../../Components/Notice";
+import { ChatMessages } from "../../Components/Chat-messages";
+import { SelectChat } from "../../Components/Select-chat";
 import "./Chats.scss";
 
 export const Chats = () => {
@@ -21,7 +22,7 @@ export const Chats = () => {
   const { messageList } = useSelector(messagesSelector);
 
   const chatList = useSelector(chatsSelector);
-  const [newChat, setNewChat] = useState("");
+  const [chatName, setChatName] = useState("");
   const [name, setName] = useState("");
 
   const { chatId } = useParams();
@@ -29,59 +30,70 @@ export const Chats = () => {
 
   const [open, setOpen] = useState(false);
 
+  const handleMessageChange = useCallback(
+    (e) => {
+      setMessage(e.target.value);
+    },
+    [setMessage]
+  );
+
+  const handleClick = useCallback(() => {
+    if (message.length !== 0) {
+      dispatch(addMessageThunkAction({ message, chatId, name, setNotice }));
+      setMessage("");
+    }
+  }, [dispatch, message, chatId, name, setNotice, setMessage]);
+
+  const mouseOver = useCallback(() => {
+    setNotice("");
+  }, [setNotice]);
+
+  const handleChatNameChange = useCallback(
+    (e) => {
+      setChatName(e.target.value);
+    },
+    [setChatName]
+  );
+
+  const handleAddChat = useCallback(() => {
+    if (chatName.length !== 0) {
+      dispatch(addChatAction({ chatName }));
+      setOpen(false);
+      setChatName("");
+    }
+  }, [dispatch, chatName, setOpen, setChatName]);
+
+  const handeleClickChatDelete = useCallback(
+    (id) => {
+      dispatch(deleteChatWithSaga({ id }));
+      dispatch(deleteMessageAction({ id }));
+    },
+    [dispatch]
+  );
+
+  const handleClickOpen = useCallback(() => {
+    setOpen(true);
+  }, [setOpen]);
+
+  const handleClose = useCallback(() => {
+    setOpen(false);
+  }, [setOpen]);
+
+  useEffect(() => {
+    if (!chatId || !chatList.find((item) => item.id === chatId)) {
+      setName("");
+    } else {
+      setName(chatList.find((item) => item.id === chatId).chatName);
+    }
+  }, [chatList, chatId, setName]);
+
   if (!chatList.find((item) => item.id === chatId) && path === "/chats/:chatId?") {
     return <Redirect to={ROUTES.CHATS} />;
   }
 
-  const handleMessageChange = (e) => {
-    setMessage(e.target.value);
-  };
-
-  const handleClick = () => {
-    if (message.length !== 0) {
-      dispatch(addMessageAction({ message, chatId }));
-      setMessage("");
-      const timer = setTimeout(() => {
-        setNotice(`The message was sent to the contact: ${name}`);
-      }, 1500);
-      return () => clearTimeout(timer);
-    }
-  };
-
-  const mouseOver = () => {
-    setNotice("");
-  };
-
-  const handleChatChange = (e) => {
-    setNewChat(e.target.value);
-  };
-
-  const handleClickSetChat = () => {
-    if (newChat.length !== 0) {
-      dispatch(addChatAction({ newChat }));
-      setOpen(false);
-      setNewChat("");
-    }
-  };
-
-  const handeleClickChatDelete = (id) => {
-    dispatch(deleteChatAction({ id }));
-    dispatch(deleteMessageAction({ id }));
-  };
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
   return (
     <div className="Chats">
-      <p className="Chats__notice" onMouseOver={mouseOver}>
-        {notice}
-      </p>
+      <Notice mouseOver={mouseOver} notice={notice} />
       <div>
         <List
           subheader={
@@ -98,49 +110,27 @@ export const Chats = () => {
           />
         </List>
         <div className="Chats__add-chat">
-          <Button variant="outlined" color="primary" onClick={handleClickOpen}>
-            Add a chat
-          </Button>
-          <Dialog open={open} onClose={handleClose}>
-            <DialogContent>
-              <DialogContentText>Enter the chat name</DialogContentText>
-              <TextField
-                autoFocus
-                margin="dense"
-                id="name"
-                label="Chat"
-                type="text"
-                fullWidth
-                value={newChat}
-                onChange={handleChatChange}
-              />
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={handleClose} color="primary">
-                Cancel
-              </Button>
-              <Button onClick={handleClickSetChat} color="primary">
-                Add
-              </Button>
-            </DialogActions>
-          </Dialog>
+          <AddChatButton
+            handleClickOpen={handleClickOpen}
+            open={open}
+            handleClose={handleClose}
+            chatName={chatName}
+            handleChatNameChange={handleChatNameChange}
+            handleAddChat={handleAddChat}
+          />
         </div>
       </div>
       {chatId && (
-        <div className="Chats__message">
-          <ul className="Chats__message-list">
-            <h3 className="Chats__author">{name}</h3>
-            <Message messageList={messageList} chatId={chatId} />
-          </ul>
-          <Form
-            handleMessageChange={handleMessageChange}
-            handleClick={handleClick}
-            message={message}
-            chatId={chatId}
-          />
-        </div>
+        <ChatMessages
+          messageList={messageList}
+          chatId={chatId}
+          handleMessageChange={handleMessageChange}
+          handleClick={handleClick}
+          message={message}
+          name={name}
+        />
       )}
-      {!chatId && <h2 className="Chats__no-chat">Please select a chat</h2>}
+      {!chatId && <SelectChat />}
     </div>
   );
 };

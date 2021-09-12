@@ -1,7 +1,7 @@
 import { TOGGLE_NAME_ACTION } from "./constants";
 
 const initialState = {
-  name: "Igor",
+  name: "IVAN",
   showName: false,
 };
 

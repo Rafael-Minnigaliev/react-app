@@ -1,10 +1,10 @@
-import "./Message.scss";
+import "./MessageList.scss";
 
-export const Message = ({ messageList, chatId }) => {
+export const MessageList = ({ messageList, chatId }) => {
   if (messageList[chatId]) {
     return messageList[chatId].map((el) => {
       return (
-        <p key={el.id} className="Message">
+        <p key={el.id} className="MessageList">
           {el.text}
         </p>
       );
