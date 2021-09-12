@@ -17,6 +17,9 @@ export const Header = () => {
           <Link className="Header__link" to={ROUTES.PROFILES}>
             <Tab label="Profile" />
           </Link>
+          <Link className="Header__link" to={ROUTES.DOGS}>
+            <Tab label="Dogs" />
+          </Link>
         </Tabs>
       </AppBar>
     </header>
