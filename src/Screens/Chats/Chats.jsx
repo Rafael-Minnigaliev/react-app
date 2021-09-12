@@ -4,8 +4,8 @@ import { Redirect, useParams, useRouteMatch } from "react-router-dom";
 import { useCallback, useEffect, useState } from "react";
 import { AddChatButton } from "../../Components/Add-chat-button/Main/AddChatButton";
 import { chatsSelector } from "../../Store/Chats/selectors";
-import { addChatAction, deleteChatWithSaga } from "../../Store/Chats/actions";
-import { addMessageThunkAction, deleteMessageAction } from "../../Store/Messages/actions";
+import { addChatAction, deleteChatAction } from "../../Store/Chats/actions";
+import { addMessageAction, addMessageThunkAction, deleteMessageAction } from "../../Store/Messages/actions";
 import { messagesSelector } from "../../Store/Messages/selectors";
 import { ROUTES } from "../../Routing/Constants";
 import { ChatList } from "../../Components/Chat-list";
@@ -39,7 +39,8 @@ export const Chats = () => {
 
   const handleClick = useCallback(() => {
     if (message.length !== 0) {
-      dispatch(addMessageThunkAction({ message, chatId, name, setNotice }));
+      dispatch(addMessageAction({ message, chatId }));
+      dispatch(addMessageThunkAction({ name, setNotice }));
       setMessage("");
     }
   }, [dispatch, message, chatId, name, setNotice, setMessage]);
@@ -65,7 +66,7 @@ export const Chats = () => {
 
   const handeleClickChatDelete = useCallback(
     (id) => {
-      dispatch(deleteChatWithSaga({ id }));
+      dispatch(deleteChatAction({ id }));
       dispatch(deleteMessageAction({ id }));
     },
     [dispatch]

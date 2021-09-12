@@ -10,9 +10,8 @@ export const deleteMessageAction = (payload) => ({
   payload,
 });
 
-export const addMessageThunkAction = (payload) => (dispatch) => {
-  const { name, setNotice, message, chatId } = payload;
-  dispatch(addMessageAction({ message, chatId }));
+export const addMessageThunkAction = (payload) => () => {
+  const { name, setNotice } = payload;
   const timer = setTimeout(() => {
     setNotice(`The message was sent to the contact: ${name}`);
   }, 1500);

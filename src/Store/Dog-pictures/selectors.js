@@ -1,4 +1,4 @@
-export const dataSelector = (state) => state.dogPicture.data;
+export const dogsSelector = (state) => state.dogPicture.data;
 
 export const loadingSelector = (state) => state.dogPicture.loading;
 
