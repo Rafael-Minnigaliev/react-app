@@ -4,8 +4,13 @@ import { Redirect, useParams, useRouteMatch } from "react-router-dom";
 import { useCallback, useEffect, useState } from "react";
 import { AddChatButton } from "../../Components/Add-chat-button/Main/AddChatButton";
 import { chatsSelector } from "../../Store/Chats/selectors";
-import { addChatAction, deleteChatAction } from "../../Store/Chats/actions";
-import { addMessageAction, addMessageThunkAction, deleteMessageAction } from "../../Store/Messages/actions";
+import { addChatWithFirebase, deleteChatWithFirebase, initChatTracking } from "../../Store/Chats/actions";
+import {
+  addMessageThunkAction,
+  addMessageWithFirebase,
+  deleteMessageWithFirebase,
+  initMessageTracking,
+} from "../../Store/Messages/actions";
 import { messagesSelector } from "../../Store/Messages/selectors";
 import { ROUTES } from "../../Routing/Constants";
 import { ChatList } from "../../Components/Chat-list";
@@ -29,6 +34,7 @@ export const Chats = () => {
   const { path } = useRouteMatch();
 
   const [open, setOpen] = useState(false);
+  const idMessage = `${chatId}-${messageList[chatId]?.length || 0}`;
 
   const handleMessageChange = useCallback(
     (e) => {
@@ -39,11 +45,11 @@ export const Chats = () => {
 
   const handleClick = useCallback(() => {
     if (message.length !== 0) {
-      dispatch(addMessageAction({ message, chatId }));
+      dispatch(addMessageWithFirebase({ chatId, idMessage, message }));
       dispatch(addMessageThunkAction({ name, setNotice }));
       setMessage("");
     }
-  }, [dispatch, message, chatId, name, setNotice, setMessage]);
+  }, [dispatch, message, chatId, name, setNotice, idMessage]);
 
   const mouseOver = useCallback(() => {
     setNotice("");
@@ -58,7 +64,7 @@ export const Chats = () => {
 
   const handleAddChat = useCallback(() => {
     if (chatName.length !== 0) {
-      dispatch(addChatAction({ chatName }));
+      dispatch(addChatWithFirebase(chatName));
       setOpen(false);
       setChatName("");
     }
@@ -66,8 +72,8 @@ export const Chats = () => {
 
   const handeleClickChatDelete = useCallback(
     (id) => {
-      dispatch(deleteChatAction({ id }));
-      dispatch(deleteMessageAction({ id }));
+      dispatch(deleteChatWithFirebase(id));
+      dispatch(deleteMessageWithFirebase(id));
     },
     [dispatch]
   );
@@ -79,6 +85,11 @@ export const Chats = () => {
   const handleClose = useCallback(() => {
     setOpen(false);
   }, [setOpen]);
+
+  useEffect(() => {
+    dispatch(initMessageTracking());
+    dispatch(initChatTracking());
+  }, [dispatch]);
 
   useEffect(() => {
     if (!chatId || !chatList.find((item) => item.id === chatId)) {

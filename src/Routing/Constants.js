@@ -5,4 +5,6 @@ export const ROUTES = {
   PROFILES: "/profiles",
   DOGS: "/dogs",
   NOT_FOUND: "/not-found",
+  LOGIN: "/login",
+  SIGNUP: "/signup",
 };

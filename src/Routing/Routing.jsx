@@ -1,35 +1,49 @@
-import { Redirect, Route, Switch } from "react-router-dom";
+import { Redirect, Switch } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { authenticatedSelector } from "../Store/Authenticated/selectors";
 import { Main } from "../Screens/Main";
 import { Profile } from "../Screens/Profile";
 import { Chats } from "../Screens/Chats";
 import { ROUTES } from "./Constants";
 import { NotFound } from "../Screens/NotFound";
 import { Dogs } from "../Screens/Dogs";
+import { PrivateRoute } from "./PrivateRoute";
+import { PublicRoute } from "./PublicRoute";
+import { Signup } from "../Screens/Signup";
+import { Login } from "../Screens/Login";
 
 export const Routing = () => {
+  const authenticated = useSelector(authenticatedSelector);
+
   return (
     <Switch>
-      <Route exact path={ROUTES.MAIN}>
+      <PublicRoute exact path={ROUTES.MAIN} authenticated={authenticated}>
         <Main />
-      </Route>
-      <Route exact path={ROUTES.CHATS}>
+      </PublicRoute>
+      <PublicRoute exact path={ROUTES.LOGIN} authenticated={authenticated}>
+        <Login />
+      </PublicRoute>
+      <PublicRoute exact path={ROUTES.SIGNUP} authenticated={authenticated}>
+        <Signup />
+      </PublicRoute>
+      <PrivateRoute exact path={ROUTES.CHATS} authenticated={authenticated}>
         <Chats />
-      </Route>
-      <Route path={ROUTES.CHAT}>
+      </PrivateRoute>
+      <PrivateRoute path={ROUTES.CHAT} authenticated={authenticated}>
         <Chats />
-      </Route>
-      <Route path={ROUTES.PROFILES}>
+      </PrivateRoute>
+      <PrivateRoute path={ROUTES.PROFILES} authenticated={authenticated}>
         <Profile />
-      </Route>
-      <Route path={ROUTES.DOGS}>
+      </PrivateRoute>
+      <PrivateRoute path={ROUTES.DOGS} authenticated={authenticated}>
         <Dogs />
-      </Route>
-      <Route path={ROUTES.NOT_FOUND}>
+      </PrivateRoute>
+      <PrivateRoute path={ROUTES.NOT_FOUND} authenticated={authenticated}>
         <NotFound />
-      </Route>
-      <Route>
+      </PrivateRoute>
+      <PrivateRoute authenticated={authenticated}>
         <Redirect to={ROUTES.NOT_FOUND} />
-      </Route>
+      </PrivateRoute>
     </Switch>
   );
 };

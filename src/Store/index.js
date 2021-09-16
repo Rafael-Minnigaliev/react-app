@@ -7,13 +7,14 @@ import { messageReducers } from "./Messages/reducers";
 import { chatReducers } from "./Chats/reducers";
 import { middleware } from "../Middleware/middleware";
 import { dogPictureReducers } from "./Dog-pictures/reducers";
+import { authenticatedReducers } from "./Authenticated/reducers";
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 const persistConfig = {
   key: "root",
   storage,
-  blacklist: ["messages"],
+  blacklist: ["chats", "messages"],
 };
 
 const rootReducer = combineReducers({
@@ -21,6 +22,7 @@ const rootReducer = combineReducers({
   messages: messageReducers,
   chats: chatReducers,
   dogPicture: dogPictureReducers,
+  authenticated: authenticatedReducers,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
