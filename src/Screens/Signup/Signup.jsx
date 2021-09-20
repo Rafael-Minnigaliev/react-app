@@ -1,11 +1,12 @@
 import { useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { TextField, Button } from "@material-ui/core";
+import { Button } from "@material-ui/core";
 import { ROUTES } from "../../Routing/Constants";
 import { addEmailAction, addPasswordAction, submitFirebaseThunkAction } from "../../Store/Authenticated/actions";
 import { passwordSelector, emailSelector, errorSelector } from "../../Store/Authenticated/selectors";
 import "./Signup.scss";
+import { Input } from "../../Components/Input";
 
 export const Signup = () => {
   const dispatch = useDispatch();
@@ -27,23 +28,21 @@ export const Signup = () => {
 
   return (
     <div className="Signup">
-      <TextField
-        label="Email"
-        placeholder="Enter your email address"
-        variant="outlined"
+      <Input
+        label={"Email"}
+        placeholder={"Enter your email address"}
+        variant={"outlined"}
         value={email}
-        type="email"
+        type={"email"}
         onChange={handleEmailChange}
-        style={{ marginBottom: "20px" }}
       />
-      <TextField
-        label="Password"
-        placeholder="Enter your password"
-        variant="outlined"
-        type="password"
+      <Input
+        label={"Password"}
+        placeholder={"Enter your password"}
+        variant={"outlined"}
+        type={"password"}
         value={password}
         onChange={handlePasswordChange}
-        style={{ marginBottom: "20px" }}
       />
       <Button variant="contained" color="primary" onClick={handleSubmit}>
         Submit

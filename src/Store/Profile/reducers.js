@@ -13,10 +13,14 @@ export const profileReducers = (state = initialState, action) => {
         showName: !state.showName,
       };
     case SET_NAME_ACTION:
-      return {
-        ...state,
-        name: action.payload,
-      };
+      if (action.payload === undefined) {
+        return state;
+      } else {
+        return {
+          ...state,
+          name: action.payload,
+        };
+      }
     default:
       return state;
   }
