@@ -1,9 +1,19 @@
 import { Tab, Tabs, AppBar } from "@material-ui/core";
+import { useCallback } from "react";
+import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import { ROUTES } from "../../Routing/Constants";
+import { exitFirebaseThunkAction } from "../../Store/Authenticated/actions";
+import { Btn } from "../Btn/Btn";
 import "./Header.scss";
 
 export const Header = () => {
+  const dispatch = useDispatch();
+
+  const handleExit = useCallback(() => {
+    dispatch(exitFirebaseThunkAction());
+  }, [dispatch]);
+
   return (
     <header>
       <AppBar position="static">
@@ -26,6 +36,7 @@ export const Header = () => {
           <Link className="Header__link" to={ROUTES.SIGNUP}>
             <Tab label="Signup" />
           </Link>
+          <Btn onClick={handleExit} label={"Exit"} variant={"text"} color={"secondary"} />
         </Tabs>
       </AppBar>
     </header>

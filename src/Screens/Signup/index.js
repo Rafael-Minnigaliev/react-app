@@ -1,3 +1,3 @@
 import { Signup } from "./Signup";
 
-export { Signup };
+export default Signup;

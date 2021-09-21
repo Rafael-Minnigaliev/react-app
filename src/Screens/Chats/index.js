@@ -1,3 +1,3 @@
 import { Chats } from "./Chats";
 
-export { Chats };
+export default Chats;
