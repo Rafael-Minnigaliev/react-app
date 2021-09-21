@@ -1,7 +1,6 @@
-import { FormControlLabel, Checkbox, TextField, Button } from "@material-ui/core";
+import { FormControlLabel, Checkbox, TextField } from "@material-ui/core";
 import { useCallback, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { exitFirebaseThunkAction } from "../../Store/Authenticated/actions";
 import { uidSelector } from "../../Store/Authenticated/selectors";
 import { changeNameWithFirebase, initNameTracking, toggleNameAction } from "../../Store/Profile/actions";
 import { nameSelector, showNameSelector } from "../../Store/Profile/selectors";
@@ -19,10 +18,6 @@ export const Profile = () => {
 
   const handleToggleName = useCallback(() => {
     dispatch(toggleNameAction());
-  }, [dispatch]);
-
-  const handleExit = useCallback(() => {
-    dispatch(exitFirebaseThunkAction());
   }, [dispatch]);
 
   const handleChangeName = (e) => {
@@ -47,9 +42,6 @@ export const Profile = () => {
         onChange={handleChangeName}
         style={{ marginBottom: "100px" }}
       />
-      <Button variant="contained" color="primary" onClick={handleExit}>
-        Exit
-      </Button>
     </div>
   );
 };
