@@ -12,7 +12,6 @@ export const Form = ({ handleClick, handleMessageChange, message, chatId }) => {
   return (
     <div className="Form">
       <TextField
-        id="outlined-basic"
         multiline
         fullWidth
         maxRows={2}

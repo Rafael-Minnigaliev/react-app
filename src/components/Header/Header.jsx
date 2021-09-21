@@ -11,14 +11,20 @@ export const Header = () => {
           <Link className="Header__link" to={ROUTES.MAIN}>
             <Tab label="Home" />
           </Link>
-          <Link className="Header__link" to={ROUTES.CHATS}>
-            <Tab label="Chats" />
-          </Link>
           <Link className="Header__link" to={ROUTES.PROFILES}>
             <Tab label="Profile" />
           </Link>
+          <Link className="Header__link" to={ROUTES.CHATS}>
+            <Tab label="Chats" />
+          </Link>
           <Link className="Header__link" to={ROUTES.DOGS}>
             <Tab label="Dogs" />
+          </Link>
+          <Link className="Header__link" to={ROUTES.LOGIN}>
+            <Tab label="Login" />
+          </Link>
+          <Link className="Header__link" to={ROUTES.SIGNUP}>
+            <Tab label="Signup" />
           </Link>
         </Tabs>
       </AppBar>

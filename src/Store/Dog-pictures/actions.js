@@ -1,5 +1,4 @@
-// import { GET_DATA } from "./constants";
-import { DogPicturesURL } from "../../URL/DogPicturesURL";
+import { DogPicturesURL } from "../../API/Constants";
 import {
   GET_DATA_ERROR_ACTION,
   GET_DATA_FINALLY_ACTION,
@@ -7,36 +6,36 @@ import {
   GET_DATA_SUCCESS_ACTION,
 } from "./constants";
 
-const getDataRequest = () => ({
+const getDataRequestAction = () => ({
   type: GET_DATA_REQUEST_ACTION,
 });
 
-const getDataSuccess = (payload) => ({
+const getDataSuccessAction = (payload) => ({
   type: GET_DATA_SUCCESS_ACTION,
   payload,
 });
 
-const getDataError = (payload) => ({
+const getDataErrorAction = (payload) => ({
   type: GET_DATA_ERROR_ACTION,
   payload,
 });
 
-const getDataFinally = () => ({
+const getDataFinallyAction = () => ({
   type: GET_DATA_FINALLY_ACTION,
 });
 
-export const getData = () => async (dispatch) => {
-  dispatch(getDataRequest());
+export const getDogsAction = () => async (dispatch) => {
+  dispatch(getDataRequestAction());
   try {
     const response = await fetch(DogPicturesURL);
     if (!response.ok) {
       throw Error(`Error ${response.status}!`);
     }
     const result = await response.json();
-    dispatch(getDataSuccess(result));
+    dispatch(getDataSuccessAction(result));
   } catch (error) {
-    dispatch(getDataError(error.message));
+    dispatch(getDataErrorAction(error.message));
   } finally {
-    dispatch(getDataFinally());
+    dispatch(getDataFinallyAction());
   }
 };

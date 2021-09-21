@@ -2,22 +2,19 @@ import storage from "redux-persist/lib/storage";
 import { applyMiddleware, combineReducers, compose, createStore } from "redux";
 import thunk from "redux-thunk";
 import { persistStore, persistReducer } from "redux-persist";
-import createSagaMiddleware from "redux-saga";
 import { profileReducers } from "./Profile/reducers";
 import { messageReducers } from "./Messages/reducers";
 import { chatReducers } from "./Chats/reducers";
 import { middleware } from "../Middleware/middleware";
-import mySaga from "../Middleware/sagas";
 import { dogPictureReducers } from "./Dog-pictures/reducers";
-
-const sagaMiddleware = createSagaMiddleware();
+import { authenticatedReducers } from "./Authenticated/reducers";
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 const persistConfig = {
   key: "root",
   storage,
-  blacklist: ["messages"],
+  blacklist: ["chats", "messages"],
 };
 
 const rootReducer = combineReducers({
@@ -25,15 +22,11 @@ const rootReducer = combineReducers({
   messages: messageReducers,
   chats: chatReducers,
   dogPicture: dogPictureReducers,
+  authenticated: authenticatedReducers,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
-export const store = createStore(
-  persistedReducer,
-  composeEnhancers(applyMiddleware(middleware, thunk, sagaMiddleware))
-);
+export const store = createStore(persistedReducer, composeEnhancers(applyMiddleware(middleware, thunk)));
 
 export let persistor = persistStore(store);
-
-sagaMiddleware.run(mySaga);

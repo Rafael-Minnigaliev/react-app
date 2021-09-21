@@ -1,7 +1,7 @@
-import { TOGGLE_NAME_ACTION } from "./constants";
+import { TOGGLE_NAME_ACTION, SET_NAME_ACTION } from "./constants";
 
 const initialState = {
-  name: "IVAN",
+  name: "",
   showName: false,
 };
 
@@ -11,6 +11,11 @@ export const profileReducers = (state = initialState, action) => {
       return {
         ...state,
         showName: !state.showName,
+      };
+    case SET_NAME_ACTION:
+      return {
+        ...state,
+        name: action.payload,
       };
     default:
       return state;

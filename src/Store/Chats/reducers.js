@@ -10,17 +10,13 @@ export const chatReducers = (state = initialState, action) => {
     case ADD_CHAT_ACTION:
       return {
         ...state,
-        chatList: [
-          ...state.chatList,
-          { id: String(Math.random()), chatName: action.payload.chatName },
-        ],
+        chatList: [...state.chatList, { id: action.payload.chatId, chatName: action.payload.chats[0] }],
       };
     case DELETE_CHAT_ACTION:
       return {
         ...state,
-        chatList: [...state.chatList.filter((item) => item.id !== action.payload.id)],
+        chatList: [...state.chatList.filter((item) => item.id !== action.payload.chatId)],
       };
-
     default:
       return state;
   }
